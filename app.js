@@ -37,6 +37,7 @@ angular
 
 				var i=0;
 				for (var x in inputObject) {
+					console.log(x + ':' + inputObject[x] + ':' + typeof(inputObject[x]) + ':' + Array.isArray(inputObject[x]));
 					newObj.push(
 				    	{
 				    		field_name: x,
