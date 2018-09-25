@@ -39,8 +39,8 @@ angular
 				for (var x in inputObject) {
 					newObj.push(
 				    	{
-				    		file: x,
-				    		Type: inputObject[x],
+				    		field_name: x,
+				    		type: inputObject[x],
 				    		description: ''
 				    	}
 			    	);
