@@ -1,6 +1,6 @@
 {
-  "name": "json-to-markdown-table",
-  "version": "1.0.0",
+  "name": "json-object-to-markdown-tables-for-document",
+  "version": "1.0.1",
   "description": "Web app that converts JSON Ojject to Markdown tables for Document",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kdelmonte/json-to-markdown-table-.git"
+    "url": "git+https://github.com/ntsd/json-object-to-markdown-tables-for-document.git"
   },
   "keywords": [
     "json",
@@ -19,9 +19,9 @@
   "author": "ntsd",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kdelmonte/json-to-markdown-table-/issues"
+    "url": "https://github.com/ntsd/json-object-to-markdown-tables-for-document/issues"
   },
-  "homepage": "https://github.com/kdelmonte/json-to-markdown-table-#readme",
+  "homepage": "https://ntsd.github.io",
   "devDependencies": {
     "browserify": "^13.1.0",
     "gulp": "^3.9.1",
