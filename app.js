@@ -8,6 +8,79 @@ var toMarkdownTable = require('markdown-table');
 var marked = require('marked');
 var jsonFormat = require('json-format');
 
+class ObjectType {
+	constructor(objectName, object) {
+		this.objectName = objectName;
+		this.object = object;
+	}
+}
+
+function isArray (value) {
+	return value && typeof value === 'object' && value.constructor === Array;
+}
+
+function isObject (value) {
+	return value && typeof value === 'object' && value.constructor === Object;
+}
+
+function objToDocType(objectName,  obj) {
+	var listObjectType = [];
+
+	var listObj = [];
+
+	for (var x in obj) {
+		// console.log(x + ':' + obj[x] + ':' + typeof(obj[x]) + ':' + Array.isArray(obj[x]));
+		if (isArray(obj[x])) {
+			if(isObject(obj[x][0])) {
+				listObj.push(
+					{
+						field_name: x,
+						type: '['+x+']',
+						description: ''
+					}
+				);
+				listObjectType = [...listObjectType, ...objToDocType(x, obj[x][0])];
+			}
+			else{
+				listObj.push(
+					{
+						field_name: x,
+						type: '['+typeof(obj[x][0])+']',
+						description: ''
+					}
+				);
+			}
+		}
+		else if (isObject(obj[x])) {
+			listObj.push(
+				{
+					field_name: x,
+					type: x,
+					description: ''
+				}
+			);
+			listObjectType = [...listObjectType, ...objToDocType(x, obj[x])];
+		}
+		else{
+			listObj.push(
+				{
+					field_name: x,
+					type: typeof(obj[x]),
+					description: ''
+				}
+			);
+		}	
+	}
+
+
+
+	const objectType = new ObjectType(objectName, listObj);
+	listObjectType.push(objectType);
+	// console.log('in func', listObjectType);
+
+	return listObjectType;
+}
+
 angular
 	.module('app', [
 		require('angular-sanitize'),
@@ -33,33 +106,33 @@ angular
 					inputObject = JSON.parse($scope.jsonInput);
 				}
 				
-				var newObj = [];
+				var listObjectType = objToDocType('MainObject', inputObject);
 
-				var i=0;
-				for (var x in inputObject) {
-					console.log(x + ':' + inputObject[x] + ':' + typeof(inputObject[x]) + ':' + Array.isArray(inputObject[x]));
-					newObj.push(
-				    	{
-				    		field_name: x,
-				    		type: inputObject[x],
-				    		description: ''
-				    	}
-			    	);
-				}
+				listObjectType.reverse();
 
-				if (true) { // check box dimension
-					var jsonTable = toJsonTable(newObj);
-					$scope.jsonOutput = jsonFormat(newObj);
-				}
-				else {
-					var jsonTable = toJsonTable(inputObject);
-					$scope.jsonOutput = jsonFormat(inputObject);
+				console.log(listObjectType);
+				
+				var jsonTextAll = [];
+				var markdownTextAll = [];
+				var htmlOutputTextAll = [];
+
+				for (var i in listObjectType) {
+					const jsonTable = toJsonTable(listObjectType[i].object);
+					const jsonText = jsonFormat(listObjectType[i]);
+					const markdownText = toMarkdownTable(jsonTable);
+					const htmlOutputText = marked(markdownText);
+
+					jsonTextAll.push(jsonText);
+					markdownTextAll.push(markdownText);
+					htmlOutputTextAll.push(htmlOutputText);
+					console.log(listObjectType[i]);
+
 				}
 				
+				$scope.jsonOutput = jsonTextAll.join('\n\n');
+				$scope.markdownOutput = markdownTextAll.join('\n\n');
+				$scope.htmlOutput = htmlOutputTextAll.join('<br><br>');
 
-
-				$scope.markdownOutput = toMarkdownTable(jsonTable);
-				$scope.htmlOutput = marked($scope.markdownOutput);
 				$scope.processed = true;
 			} catch(e){
 				$scope.error = e;
