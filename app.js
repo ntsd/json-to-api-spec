@@ -23,19 +23,23 @@ function isObject (value) {
 	return value && typeof value === 'object' && value.constructor === Object;
 }
 
+function addLinkedToStringType(typeName) {
+	return '['+typeName+'](#'  + typeName.toLowerCase() +')'
+}
+
 function objToDocType(objectName,  obj) {
 	var listObjectType = [];
 
-	var listObj = [];
+	let listObj = [];
 
-	for (var x in obj) {
+	for (let x in obj) {
 		// console.log(x + ':' + obj[x] + ':' + typeof(obj[x]) + ':' + Array.isArray(obj[x]));
 		if (isArray(obj[x])) {
 			if(isObject(obj[x][0])) {
 				listObj.push(
 					{
 						field_name: x,
-						type: '['+x+']',
+						type: '['+addLinkedToStringType(x)+']',
 						description: ''
 					}
 				);
@@ -55,7 +59,7 @@ function objToDocType(objectName,  obj) {
 			listObj.push(
 				{
 					field_name: x,
-					type: x,
+					type: addLinkedToStringType(x),
 					description: ''
 				}
 			);
@@ -106,20 +110,21 @@ angular
 					inputObject = JSON.parse($scope.jsonInput);
 				}
 				
-				var listObjectType = objToDocType('MainObject', inputObject);
+				let listObjectType = objToDocType('MainObject', inputObject);
 
 				listObjectType.reverse();
 
 				console.log(listObjectType);
 				
-				var jsonTextAll = [];
-				var markdownTextAll = [];
-				var htmlOutputTextAll = [];
+				let jsonTextAll = [];
+				let markdownTextAll = [];
+				let htmlOutputTextAll = [];
 
-				for (var i in listObjectType) {
+				for (let i in listObjectType) {
 					const jsonTable = toJsonTable(listObjectType[i].object);
 					const jsonText = jsonFormat(listObjectType[i]);
-					const markdownText = toMarkdownTable(jsonTable);
+					let markdownText = toMarkdownTable(jsonTable);
+					markdownText = '### '+listObjectType[i].objectName+'\n'+markdownText;
 					const htmlOutputText = marked(markdownText);
 
 					jsonTextAll.push(jsonText);
@@ -131,7 +136,7 @@ angular
 				
 				$scope.jsonOutput = jsonTextAll.join('\n\n');
 				$scope.markdownOutput = markdownTextAll.join('\n\n');
-				$scope.htmlOutput = htmlOutputTextAll.join('<br><br>');
+				$scope.htmlOutput = htmlOutputTextAll.join('<br>');
 
 				$scope.processed = true;
 			} catch(e){

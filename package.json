@@ -1,7 +1,7 @@
 {
   "name": "json-to-markdown-table",
   "version": "1.0.0",
-  "description": "Web app that converts JSON to Markdown tables",
+  "description": "Web app that converts JSON Ojject to Markdown tables for Document",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -17,7 +17,7 @@
     "table"
   ],
   "author": "ntsd",
-  "license": "Unlicense",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/kdelmonte/json-to-markdown-table-/issues"
   },
