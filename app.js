@@ -7,12 +7,17 @@ var toJsonTable = require('json-to-table');
 var toMarkdownTable = require('markdown-table');
 var marked = require('marked');
 var jsonFormat = require('json-format');
+var pluralize = require('pluralize');
 
 class ObjectType {
 	constructor(objectName, object) {
 		this.objectName = objectName;
 		this.object = object;
 	}
+}
+
+function capitalizeFirstLetter(string) {
+    return string[0].toUpperCase() + string.slice(1);
 }
 
 function isArray (value) {
@@ -34,16 +39,17 @@ function objToDocType(objectName,  obj) {
 
 	for (let x in obj) {
 		// console.log(x + ':' + obj[x] + ':' + typeof(obj[x]) + ':' + Array.isArray(obj[x]));
+		const objectName = capitalizeFirstLetter(pluralize.singular(x));
 		if (isArray(obj[x])) {
 			if(isObject(obj[x][0])) {
 				listObj.push(
 					{
 						field_name: x,
-						type: '['+addLinkedToStringType(x)+']',
+						type: '['+addLinkedToStringType(objectName)+']',
 						description: ''
 					}
 				);
-				listObjectType = [...listObjectType, ...objToDocType(x, obj[x][0])];
+				listObjectType = [...listObjectType, ...objToDocType(objectName, obj[x][0])];
 			}
 			else{
 				listObj.push(
@@ -59,11 +65,11 @@ function objToDocType(objectName,  obj) {
 			listObj.push(
 				{
 					field_name: x,
-					type: addLinkedToStringType(x),
+					type: addLinkedToStringType(objectName),
 					description: ''
 				}
 			);
-			listObjectType = [...listObjectType, ...objToDocType(x, obj[x])];
+			listObjectType = [...listObjectType, ...objToDocType(objectName, obj[x])];
 		}
 		else{
 			listObj.push(
