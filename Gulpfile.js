@@ -30,7 +30,8 @@ gulp.task('css', function() {
   var HIGHLIGHT_JS_THEME = 'monokai';
   return gulp.src([
       'node_modules/highlight.js/styles/' + HIGHLIGHT_JS_THEME + '.css',
-      'app.css'
+      'app.css',
+      'milligram.min.css'
     ])
     .pipe($.concatCss("bundle.css"))
     .pipe(gulp.dest('dist/'));

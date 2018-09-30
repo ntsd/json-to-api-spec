@@ -9,6 +9,9 @@ var marked = require('marked');
 var jsonFormat = require('json-format');
 var pluralize = require('pluralize');
 
+var addLink = false;
+var descriptionColumn = false;
+
 class ObjectType {
 	constructor(objectName, object) {
 		this.objectName = objectName;
@@ -29,62 +32,60 @@ function isObject (value) {
 }
 
 function addLinkedToStringType(typeName) {
-	return '['+typeName+'](#'  + typeName.toLowerCase() +')'
+	if(addLink){
+		return '['+typeName+'](#'  + typeName.toLowerCase() +')'
+	}
+	else {
+		return typeName;
+	}
 }
 
-function objToDocType(objectName,  obj) {
+function objToDocType(thisObjectName,  obj) {
 	var listObjectType = [];
 
 	let listObj = [];
 
 	for (let x in obj) {
 		// console.log(x + ':' + obj[x] + ':' + typeof(obj[x]) + ':' + Array.isArray(obj[x]));
+		let fieldName = x;
+		let typeName = '';
 		const objectName = capitalizeFirstLetter(pluralize.singular(x));
 		if (isArray(obj[x])) {
 			if(isObject(obj[x][0])) {
-				listObj.push(
-					{
-						field_name: x,
-						type: '['+addLinkedToStringType(objectName)+']',
-						description: ''
-					}
-				);
+				typeName = '[' + addLinkedToStringType(objectName) + ']';
 				listObjectType = [...listObjectType, ...objToDocType(objectName, obj[x][0])];
 			}
 			else{
-				listObj.push(
-					{
-						field_name: x,
-						type: '['+typeof(obj[x][0])+']',
-						description: ''
-					}
-				);
+				typeName = '['+typeof(obj[x][0])+']';		
 			}
 		}
 		else if (isObject(obj[x])) {
-			listObj.push(
-				{
-					field_name: x,
-					type: addLinkedToStringType(objectName),
-					description: ''
-				}
-			);
+			typeName = addLinkedToStringType(objectName);
 			listObjectType = [...listObjectType, ...objToDocType(objectName, obj[x])];
 		}
 		else{
+			typeName = typeof(obj[x]);
+		}
+		if(descriptionColumn){
 			listObj.push(
 				{
-					field_name: x,
-					type: typeof(obj[x]),
+					field_name: fieldName,
+					type: typeName,
 					description: ''
 				}
 			);
-		}	
+		}
+		else {
+			listObj.push(
+				{
+					field_name: fieldName,
+					type: typeName
+				}
+			);
+		}
 	}
 
-
-
-	const objectType = new ObjectType(objectName, listObj);
+	const objectType = new ObjectType(thisObjectName, listObj);
 	listObjectType.push(objectType);
 	// console.log('in func', listObjectType);
 
@@ -105,6 +106,8 @@ angular
 			$scope.jsonOutput = '';
 			$scope.markdownOutput = '';
 			$scope.htmlOutput = '';
+			addLink = $scope.addLink;
+			descriptionColumn = $scope.descriptionColumn;
 			if(!$scope.jsonInput.trim()){
 				return;
 			}
@@ -116,7 +119,7 @@ angular
 					inputObject = JSON.parse($scope.jsonInput);
 				}
 				
-				let listObjectType = objToDocType($scope.objName || 'MainObject', inputObject);
+				let listObjectType = objToDocType(capitalizeFirstLetter($scope.objName || 'MainObject'), inputObject);
 
 				listObjectType.reverse();
 

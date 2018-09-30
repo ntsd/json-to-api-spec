@@ -10,7 +10,9 @@
         <h1 id="page-title">JSON Object to Markdown Table for Document</h1>
         <div id="main-content">
 			<div class="section">
-				Object Name: <input type="text" name="objName" ng-model="objName"><br>
+				Object Name: <input type="text" name="objName" ng-model="objName" ng-change="jsonToMarkdownTable()"><br>
+				Add Link: <input type="checkbox" name="addLink" ng-model="addLink" ng-init="addLink=true" ng-change="jsonToMarkdownTable()"><br>
+				Description Column: <input type="checkbox" name="descriptionColumn" ng-model="descriptionColumn" ng-init="descriptionColumn=true" ng-change="jsonToMarkdownTable()"><br>
 			</div>
             <div class="section">
             	<div class="section-header">
