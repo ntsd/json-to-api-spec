@@ -116,7 +116,7 @@ angular
 					inputObject = JSON.parse($scope.jsonInput);
 				}
 				
-				let listObjectType = objToDocType('MainObject', inputObject);
+				let listObjectType = objToDocType($scope.objName || 'MainObject', inputObject);
 
 				listObjectType.reverse();
 
