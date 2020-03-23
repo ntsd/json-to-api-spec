@@ -2,63 +2,83 @@
 <html ng-app="app">
 
 <head>
-    <title>JSON Object to Markdown Table for Document</title>
-    <link rel="stylesheet" type="text/css" href="dist/bundle.css">
+	<title>JSON to API Specification Document converter</title>
+	<link rel="stylesheet" type="text/css" href="dist/bundle.css">
 </head>
+
 <body ng-cloak>
-    <div ng-controller="appController" ng-cloak>
-        <h1 id="page-title">JSON Object to Markdown Table for Document</h1>
-        <div id="main-content">
+	<div ng-controller="appController" ng-cloak>
+		<h1 id="page-title">JSON to API Specification Document converter</h1>
+		<div id="main-content">
 			<div class="section">
-				Object Name: <input type="text" name="objName" ng-model="objName" ng-change="jsonToMarkdownTable()"><br>
-				Add Link: <input type="checkbox" name="addLink" ng-model="addLink" ng-init="addLink=true" ng-change="jsonToMarkdownTable()"><br>
-				Description Column: <input type="checkbox" name="descriptionColumn" ng-model="descriptionColumn" ng-init="descriptionColumn=true" ng-change="jsonToMarkdownTable()"><br>
+				<form>
+					<fieldset>
+						<label>Object Name</label><input type="text" name="objName" ng-model="objName"
+							ng-change="jsonToMarkdownTable()">
+						<div class="row">
+							<div class="column">
+								<label class="label-inline">Add Link: </label><input type="checkbox" name="addLink" ng-model="addLink"
+									ng-init="addLink=true" ng-change="jsonToMarkdownTable()">
+							</div>
+							<div class="column">
+								<label class="label-inline">Column Description: </label><input type="checkbox" name="descriptionColumn"
+									ng-model="descriptionColumn" ng-init="descriptionColumn=true" ng-change="jsonToMarkdownTable()">
+							</div>
+						</div>
+					</fieldset>
+				</form>
 			</div>
-            <div class="section">
-            	<div class="section-header">
-            		<span>JSON</span>
-            		<button class="copy-button" ng-click="copyJson()">Copy</button>
-            	</div>
-            	<textarea
-        			ng-show="jsonInputVisible || !processed"
-                	placeholder="Enter your JSON here"
-                    id="input-json"
-                	class="json-field" 
-                	ng-model="jsonInput" 
-                	rows="5"
-                	md-select-on-focus
-                	ng-change="jsonToMarkdownTable()"
-                	ng-blur="hideJsonInput()"></textarea>               
-                <div
-                	id="formatted-json" 
-                	class="json-field" 
-                	hljs hljs-source="jsonOutput" 
-                	hljs-language="json" 
-                	ng-show="processed && !jsonInputVisible"
-                	ng-click="showJsonInput()"
-                    title="Click to edit"></div>
-            </div>
-            <div id="error-message" ng-if="error">{{error.message}}</div>
-            <div class="section" ng-if="processed">
-            	<div class="section-header">
-            		<span>Markdown Table</span>
-            		<button class="copy-button" ng-click="copyMarkdown()">Copy</button>
-            	</div>
-            	<div id="markdown-preview" class="table-preview">
-            		<div hljs hljs-source="markdownOutput" hljs-language="markdown"></div>
-            	</div>
-            	
-            </div>
-            <div class="section" ng-if="processed">
-                <div class="section-header">
-            		<span>Table Preview</span>
-            		<button class="copy-button" ng-click="copyHtml()">Copy</button>
-            	</div>
-                <div class="table-preview" ng-bind-html="htmlOutput"></div>
-            </div>
-        </div>
-    </div>
-    <script type="text/javascript" src="dist/bundle.js"></script>
+			<div class="section">
+				<div class="section-header">
+					<span>JSON Input</span>
+					<button class="copy-button" ng-click="loadExample()">Example</button>
+				</div>
+				<textarea
+					ng-show="jsonInputVisible || !processed"
+					placeholder="Enter your JSON here"
+					id="input-json"
+					class="json-field" 
+					ng-model="jsonInput" 
+					rows="5"
+					md-select-on-focus
+					ng-change="jsonToMarkdownTable()"
+				></textarea>  
+			</div>
+			<div class="section" ng-if="processed">
+				<div class="section-header">
+					<span>JSON Format</span>
+					<button class="copy-button" ng-click="copyJson()">Copy</button>
+				</div>
+				<div id="markdown-preview" class="table-preview">
+					<div
+						id="formatted-json"
+						hljs hljs-source="jsonOutput"
+						hljs-language="json"
+						title="Click to edit"></div>
+				</div>
+			</div>
+			<div id="error-message" ng-if="error">{{error.message}}</div>
+			<div class="section" ng-if="processed">
+				<div class="section-header">
+					<span>Markdown Table</span>
+					<button class="copy-button" ng-click="copyMarkdown()">Copy</button>
+				</div>
+				<div id="markdown-preview" class="table-preview">
+					<div hljs hljs-source="markdownOutput" hljs-language="markdown"></div>
+				</div>
+			</div>
+			<div class="section" ng-if="processed">
+				<div class="section-header">
+					<span>HTML Table</span>
+					<button class="copy-button" ng-click="copyHtml()">Copy</button>
+				</div>
+				<div id="markdown-preview" class="table-preview">
+					<div ng-bind-html="htmlOutput"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="dist/bundle.js"></script>
 </body>
 
 </html>

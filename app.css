@@ -62,7 +62,7 @@ textarea.json-field {
 }
 
 #markdown-preview {
-    max-height: 150px;
+    max-height: 300px;
 }
 
 .table-preview th,

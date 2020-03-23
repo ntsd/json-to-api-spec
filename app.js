@@ -23,11 +23,11 @@ function capitalizeFirstLetter(string) {
     return string[0].toUpperCase() + string.slice(1);
 }
 
-function isArray (value) {
+function isArray(value) {
 	return value && typeof value === 'object' && value.constructor === Array;
 }
 
-function isObject (value) {
+function isObject(value) {
 	return value && typeof value === 'object' && value.constructor === Object;
 }
 
@@ -56,7 +56,7 @@ function objToDocType(thisObjectName,  obj) {
 				listObjectType = [...listObjectType, ...objToDocType(objectName, obj[x][0])];
 			}
 			else{
-				typeName = '['+typeof(obj[x][0])+']';		
+				typeName = '['+typeof(obj[x][0])+']';
 			}
 		}
 		else if (isObject(obj[x])) {
@@ -133,14 +133,13 @@ angular
 					const jsonTable = toJsonTable(listObjectType[i].object);
 					const jsonText = jsonFormat(listObjectType[i]);
 					let markdownText = toMarkdownTable(jsonTable);
-					markdownText = '### '+listObjectType[i].objectName+'\n'+markdownText;
+					markdownText = '### ' + listObjectType[i].objectName + '\n\n' + markdownText;
 					const htmlOutputText = marked(markdownText);
 
 					jsonTextAll.push(jsonText);
 					markdownTextAll.push(markdownText);
 					htmlOutputTextAll.push(htmlOutputText);
 					console.log(listObjectType[i]);
-
 				}
 				
 				$scope.jsonOutput = jsonTextAll.join('\n\n');
@@ -148,37 +147,44 @@ angular
 				$scope.htmlOutput = htmlOutputTextAll.join('<br>');
 
 				$scope.processed = true;
-			} catch(e){
+			} catch(e) {
 				$scope.error = e;
 				throw e;
 			}
 		};
 
-		$scope.copyJson = function(){
+		$scope.copyJson = function() {
 			clipboard.copyText($scope.jsonOutput);
 		};
 
-		$scope.copyMarkdown = function(){
+		$scope.copyMarkdown = function() {
 			clipboard.copyText($scope.markdownOutput);
 		};
 
-		$scope.copyHtml = function(){
+		$scope.copyHtml = function() {
 			clipboard.copyText($scope.htmlOutput);
 		};
 
-		$scope.hideJsonInput = function() {
-			if($scope.processed){
-				$scope.jsonInputVisible = false;
-			}
-		};
-
-		$scope.showJsonInput = function() {
-			$scope.jsonInputVisible = true;
-			var inputJson = document.getElementById('input-json');
-			setTimeout(function(){
-				inputJson.focus();
-				inputJson.select();
-			}, 1);
-			
-		};
+		$scope.loadExample = function() {
+			const exmaple_json = `{
+  "id": 0,
+  "category": {
+    "id": 0,
+    "name": "string"
+  },
+  "name": "doggie",
+  "photoUrls": [
+    "string"
+  ],
+  "tags": [
+    {
+      "id": 0,
+      "name": "string"
+    }
+  ],
+  "status": "available"
+}`;
+			$scope.jsonInput = exmaple_json;
+			$scope.jsonToMarkdownTable();
+		}
 	});
